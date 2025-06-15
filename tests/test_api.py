@@ -1,19 +1,26 @@
-from unittest.mock import patch, Mock, MagicMock
+from unittest.mock import patch, Mock, MagicMock, AsyncMock
 import pytest
+from datetime import datetime
 
 
 def test_get_latest_price(client):
     """Test getting latest price with mocked service"""
     # Mock the entire market service instead of yfinance directly
     with patch('app.api.dependencies.get_market_service') as mock_get_service:
-        # Mock the market service
+        # Mock the market service with AsyncMock for async methods
         mock_service = MagicMock()
-        mock_service.get_latest_price.return_value = {
+        
+        # Create proper datetime object for timestamp
+        mock_timestamp = datetime(2024, 1, 1, 0, 0, 0)
+        
+        # Mock the async method properly
+        mock_service.get_latest_price = AsyncMock(return_value={
             "symbol": "AAPL",
             "price": 150.0,
-            "timestamp": "2024-01-01T00:00:00",
+            "timestamp": mock_timestamp,
             "provider": "yfinance"
-        }
+        })
+        
         mock_get_service.return_value = mock_service
         
         # Make the API call
