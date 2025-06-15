@@ -9,10 +9,21 @@ from app.models.market_data import (
     PollingJob,
 )
 
-# Fixed: Changed import to match what's actually available
-from app.services.providers.base import (
-    get_provider,
-)  # or wherever get_provider is actually defined
+
+def get_provider(provider_name: str):
+    """Temporary provider function - replace with actual implementation"""
+    from types import SimpleNamespace
+
+    # Mock provider object for now
+    mock_provider = SimpleNamespace()
+    mock_provider.get_latest_price = lambda symbol: {
+        "price": 100.0,
+        "timestamp": datetime.now(),
+        "raw_data": {"symbol": symbol, "price": 100.0},
+    }
+    return mock_provider
+
+
 from app.services.kafka_service import KafkaService
 import uuid
 

@@ -1,6 +1,6 @@
 import json
 import asyncio
-from typing import Dict, Any, Optional, Callable
+from typing import Dict, Any, Optional, Callable, Awaitable
 from confluent_kafka import Producer, Consumer, KafkaError
 from app.core.config import settings
 import logging
@@ -81,7 +81,10 @@ class KafkaService:
 
                 try:
                     message_data = json.loads(msg.value().decode("utf-8"))
-                    await callback(message_data)
+                    # Check if callback is async or sync
+                    result = callback(message_data)
+                    if hasattr(result, "__await__"):
+                        await result
                 except Exception as e:
                     logger.error(f"Error processing message: {e}")
 
