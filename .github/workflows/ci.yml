@@ -46,6 +46,8 @@ jobs:
           DATABASE_URL: postgresql://postgres:password@localhost:5432/marketdata_test
           KAFKA_BOOTSTRAP_SERVERS: localhost:9092
           PYTHONPATH: .
+          # Ensure tests use PostgreSQL, not SQLite
+          TEST_DATABASE_URL: postgresql://postgres:password@localhost:5432/marketdata_test
         run: |
           pytest tests/ -v --cov=app --cov-report=xml
       - name: Upload coverage to Codecov
