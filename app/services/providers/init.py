@@ -7,6 +7,7 @@ PROVIDERS = {
     "alpha_vantage": AlphaVantageProvider,
 }
 
+
 def get_provider(provider_name: str) -> BaseProvider:
     if provider_name not in PROVIDERS:
         raise ValueError(f"Unknown provider: {provider_name}")
