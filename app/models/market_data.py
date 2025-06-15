@@ -49,9 +49,9 @@ class PollingJob(Base):
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     job_id = Column(String(100), unique=True, nullable=False)
-    symbols = Column(Text, nullable=False)  # JSON array as string
+    symbols = Column(Text, nullable=False)
     interval = Column(Integer, nullable=False)
     provider = Column(String(50), nullable=False)
-    status = Column(String(20), default="active")  # active, paused, stopped
+    status = Column(String(20), default="active")
     created_at = Column(DateTime, default=datetime.utcnow)
     last_run = Column(DateTime, nullable=True)

@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Market Data Service"
     
     # Database
-    DATABASE_URL: str = "postgresql://postgres:password@postgres:5432/marketdata"
+    DATABASE_URL: str = "postgresql://postgres:password@localhost:5432/marketdata"
     
     # Redis
     REDIS_URL: str = "redis://localhost:6379"

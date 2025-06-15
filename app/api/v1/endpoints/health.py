@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends
 from datetime import datetime
-from sqlalchemy import text
 from app.schemas.market_data import HealthResponse
 from app.models.database import get_db
 from app.services.kafka_service import KafkaService
@@ -17,10 +16,9 @@ async def health_check(
     """Health check endpoint"""
     # Check database
     try:
-        db.execute(text("SELECT 1"))
+        db.execute("SELECT 1")
         db_status = "healthy"
-    except Exception as e:
-        print(f"Database error: {e}")  # Debug info
+    except Exception:
         db_status = "unhealthy"
     
     # Check Kafka (simplified check)

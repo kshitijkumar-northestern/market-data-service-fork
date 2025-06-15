@@ -21,7 +21,7 @@ class YFinanceProvider(BaseProvider):
                 "raw_data": hist.tail(1).to_dict()
             }
         
-        # run in thread pool to avoid blocking
+        # Run in thread pool to avoid blocking
         loop = asyncio.get_event_loop()
         result = await loop.run_in_executor(None, _fetch_price)
         
