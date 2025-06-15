@@ -81,10 +81,7 @@ class KafkaService:
 
                 try:
                     message_data = json.loads(msg.value().decode("utf-8"))
-                    # Check if callback is async or sync
-                    result = callback(message_data)
-                    if hasattr(result, "__await__"):
-                        await result
+                    callback(message_data)
                 except Exception as e:
                     logger.error(f"Error processing message: {e}")
 
