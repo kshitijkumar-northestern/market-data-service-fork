@@ -1,6 +1,5 @@
 from unittest.mock import patch, Mock, MagicMock
 import pytest
-from fastapi.testclient import TestClient
 
 
 @patch('app.services.providers.yfinance_provider.yf.Ticker')
