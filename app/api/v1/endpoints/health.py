@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from datetime import datetime
+from sqlalchemy import text  # Added import for text()
 from app.schemas.market_data import HealthResponse
 from app.models.database import get_db
 from app.services.kafka_service import KafkaService
@@ -17,7 +18,7 @@ async def health_check(
     """Health check endpoint"""
     # Check database
     try:
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))  # Fixed: wrapped SQL string in text()
         db_status = "healthy"
     except Exception:
         db_status = "unhealthy"

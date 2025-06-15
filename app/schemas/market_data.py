@@ -12,8 +12,8 @@ class PriceResponse(BaseModel):
 
 
 class PollRequest(BaseModel):
-    symbols: List[str] = Field(..., min_items=1, max_items=10)
-    interval: int = Field(60, ge=30, le=3600)  # 30 seconds to 1 hour
+    symbols: List[str] = Field(..., min_length=1, max_length=100)
+    interval: int = Field(60, ge=30, le=3600)
     provider: str = "yfinance"
 
 

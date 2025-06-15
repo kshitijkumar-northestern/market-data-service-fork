@@ -8,7 +8,11 @@ from app.models.market_data import (
     MovingAverage,
     PollingJob,
 )
-from app.services.providers import get_provider
+
+# Fixed: Changed import to match what's actually available
+from app.services.providers.base import (
+    get_provider,
+)  # or wherever get_provider is actually defined
 from app.services.kafka_service import KafkaService
 import uuid
 
