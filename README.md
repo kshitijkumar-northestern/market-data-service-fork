@@ -4,7 +4,24 @@ A production-ready microservice for fetching, processing, and serving real-time 
 
 ## Quick Start
 
-### Docker Deployment
+### Option 1: Automated Setup (Recommended)
+```bash
+# Clone the repository
+git clone <repository-url>
+cd market-data-service
+
+# Run the automated setup script
+chmod +x setup.sh
+./setup.sh
+
+# The script will:
+# - Create virtual environment
+# - Install dependencies
+# - Start infrastructure services
+# - Launch the application automatically
+```
+
+### Option 2: Docker Deployment
 ```bash
 docker-compose up --build
 
@@ -15,15 +32,15 @@ curl http://localhost:8000/health
 curl "http://localhost:8000/prices/latest?symbol=AAPL"
 ```
 
-### Local Development
+### Option 3: Manual Local Development
 ```bash
 # Start infrastructure services
 docker-compose up postgres kafka zookeeper redis -d
 
 # Setup Python environment
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements/dev.txt
+pip install -r requirements/base.txt
 
 # Start application
 python -m app.main
@@ -31,6 +48,32 @@ python -m app.main
 # Start consumer (separate terminal)
 python -m app.services.moving_average_consumer
 ```
+
+## Setup Script Details
+
+The included `setup.sh` script automates the entire development setup:
+
+**What it does:**
+- Creates Python virtual environment
+- Installs all dependencies
+- Starts infrastructure services (PostgreSQL, Kafka, Redis)
+- Waits for services to initialize
+- Launches the FastAPI application
+
+**Usage:**
+```bash
+# Make executable and run
+chmod +x setup.sh
+./setup.sh
+
+# Alternative: Run with bash
+bash setup.sh
+```
+
+**After setup completes, the application will be available at:**
+- API: http://localhost:8000
+- Interactive Docs: http://localhost:8000/docs
+- Health Check: http://localhost:8000/health
 
 ## API Reference
 
@@ -137,6 +180,14 @@ GET /health
 
 ## Testing
 
+### Quick Testing
+```bash
+# After setup.sh completes, test these endpoints:
+curl http://localhost:8000/health
+curl "http://localhost:8000/prices/latest?symbol=AAPL"
+curl "http://localhost:8000/prices/latest?symbol=MSFT"
+```
+
 ### Test Suite
 ```bash
 # Run all tests
@@ -181,27 +232,40 @@ curl "http://localhost:8000/prices/latest?symbol=AAPL"
 3. Calculates 5-point moving average
 4. Stores result in `moving_averages` table
 
-## Monitoring
+## Development Workflow
 
-### Health Monitoring
+### Getting Started
+1. **Clone and setup**: Run `./setup.sh` for complete environment setup
+2. **Start developing**: Application runs automatically after setup
+3. **Test changes**: Use the provided curl commands or visit `/docs`
+4. **Background processing**: Start consumer with `python -m app.services.moving_average_consumer`
+
+### Making Changes
 ```bash
-# Database connectivity
-python -c "from app.models.database import engine; engine.connect().execute('SELECT 1')"
+# The virtual environment remains active after setup
+# Make your changes to the code
 
-# Kafka broker status
-docker-compose logs kafka
+# Restart the application
+# Press Ctrl+C to stop, then:
+python -m app.main
 
-# Application health
-curl http://localhost:8000/health
+# Or restart with auto-reload during development
+uvicorn app.main:app --reload
 ```
 
-### Logging
-- Structured logging with configurable levels
-- Request/response tracing
-- Error tracking and monitoring
-- Performance metrics collection
-
 ## Troubleshooting
+
+### Setup Script Issues
+```bash
+# If setup.sh fails, check:
+python3 --version  # Ensure Python 3.8+
+docker --version   # Ensure Docker is installed
+docker-compose --version  # Ensure Docker Compose is available
+
+# Manual cleanup if needed
+docker-compose down
+rm -rf venv
+```
 
 ### Database Issues
 ```bash
@@ -262,4 +326,3 @@ cp .env.example .env
 # Edit configuration file
 # Update database URLs, API keys, and service endpoints
 ```
-
