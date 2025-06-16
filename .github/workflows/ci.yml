@@ -46,6 +46,7 @@ jobs:
         pytest tests/ -v
 
   build:
+    needs: test  # This is the key fix - build only runs after test passes
     runs-on: ubuntu-latest
     
     steps:
