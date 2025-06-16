@@ -8,22 +8,7 @@ from app.models.market_data import (
     MovingAverage,
     PollingJob,
 )
-
-
-def get_provider(provider_name: str):
-    """Temporary provider function - replace with actual implementation"""
-    from types import SimpleNamespace
-
-    # Mock provider object for now
-    mock_provider = SimpleNamespace()
-    mock_provider.get_latest_price = lambda symbol: {
-        "price": 100.0,
-        "timestamp": datetime.now(),
-        "raw_data": {"symbol": symbol, "price": 100.0},
-    }
-    return mock_provider
-
-
+from app.services.providers import get_provider
 from app.services.kafka_service import KafkaService
 import uuid
 
@@ -35,8 +20,6 @@ class MarketService:
 
     async def get_latest_price(self, symbol: str, provider: str = "yfinance") -> dict:
         """Get latest price for a symbol"""
-        # Check cache first (Redis implementation can be added later)
-
         # Fetch from provider
         provider_instance = get_provider(provider)
         price_data = await provider_instance.get_latest_price(symbol)
@@ -48,7 +31,7 @@ class MarketService:
             raw_response=json.dumps(price_data["raw_data"]),
         )
         self.db.add(raw_response)
-        self.db.flush()  # Get ID without committing
+        self.db.flush()
 
         # Store processed price point
         price_point = PricePoint(

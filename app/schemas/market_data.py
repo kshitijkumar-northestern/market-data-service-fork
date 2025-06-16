@@ -12,7 +12,7 @@ class PriceResponse(BaseModel):
 
 
 class PollRequest(BaseModel):
-    symbols: List[str] = Field(..., min_length=1, max_length=100)
+    symbols: List[str] = Field(..., min_items=1, max_items=10)  # FIXED: min_items instead of min_length
     interval: int = Field(60, ge=30, le=3600)
     provider: str = "yfinance"
 

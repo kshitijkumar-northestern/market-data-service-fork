@@ -4,7 +4,7 @@ from typing import Optional
 
 class Settings(BaseSettings):
     # API Settings
-    API_V1_STR: str = "/api/v1"
+    API_V1_STR: str = ""  # Empty to match assignment spec
     PROJECT_NAME: str = "Market Data Service"
 
     # Database

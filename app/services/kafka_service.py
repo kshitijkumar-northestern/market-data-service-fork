@@ -59,7 +59,7 @@ class KafkaService:
             raise
 
     async def consume_price_events(
-        self, callback: Callable[[Dict[str, Any]], None]
+        self, callback: Callable[[Dict[str, Any]], Awaitable[None]]  # FIXED: Added Awaitable
     ) -> None:
         """Consume price events from Kafka"""
         consumer = self.get_consumer()
@@ -81,7 +81,7 @@ class KafkaService:
 
                 try:
                     message_data = json.loads(msg.value().decode("utf-8"))
-                    callback(message_data)
+                    await callback(message_data)  # FIXED: Added await
                 except Exception as e:
                     logger.error(f"Error processing message: {e}")
 
